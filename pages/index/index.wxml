@@ -24,7 +24,7 @@
         <button formType="submit" type="primary">提交</button>
       </view>
       <view class="margin20 gray line24 tcenter font12">
-        <text style="margin-top:-20px;">仅供行业用户使用</text>
+        <text style="margin-top:-20px;">{{note}}</text>
       </view>
     </block>
     <block wx:if="{{phone && !hasPermission}}">
@@ -32,10 +32,10 @@
         <icon type="waiting" size="40"/>
       </view>
       <view style="text-align:center" class="margin10">
-        <text>暂无授权</text>
+        <text>{{noPermission}}</text>
       </view>
       <view class="margin20 gray font12 tcenter">
-        <text>仅供行业用户使用</text>
+        <text>{{note}}</text>
       </view>
     </block>
 </view>

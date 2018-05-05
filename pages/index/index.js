@@ -11,17 +11,20 @@ Page({
     hasPermission:false,
     getCode:'获取验证码',
     inputPhone:'',
-    code:''
+    code:'',
+    disableCode:false,
+    note:'此应用仅供行业用户使用',
+    noPermission:'暂无授权'
   },
   //事件处理函数
-  bindViewTap: function() {
+  /*bindViewTap: function() {
     wx.navigateTo({
       url: '../logs/logs'
     })
-  },
+  },*/
   onLoad: function () {
     var _this=this;
-    app.setTitle('铭朗监控');
+    //app.setTitle('铭朗监控');
     wx.getStorage({
       key: 'phone',
       success: function(res) {
@@ -62,7 +65,7 @@ Page({
     let time = setInterval(() => {
       timing--;
       this.setData({
-        getCode:  timing+'s',
+        getCode:  timing,
         disableCode: true
       });
       if (timing == 0) {
@@ -76,6 +79,9 @@ Page({
   },
   requestCode: function (e) {
     let _this = this;
+    this.setData({
+      disableCode:true
+    });
     if (this.data.inputPhone.length == 11) {
       wx.showLoading();
       wx.request({
@@ -88,6 +94,7 @@ Page({
           'content-type': 'application/json'
         },
         success: function (res) {
+          console.log(res.data);
           if (res.data.code == 0) {
             wx.showToast({
               title: '发送验证码成功',
@@ -95,14 +102,15 @@ Page({
               duration: 2000
             })
             _this.countDown();
-          } else if (res.data.code == 2) {
-            app.showModal(res.data.message);
           } else {
             wx.showToast({
               title: '发送验证码失败',
               icon: 'none',
               duration: 2000
-            })
+            });
+            this.setData({
+              disableCode: false
+            });
           }
         },
         error: function (res) {
@@ -110,7 +118,10 @@ Page({
             title: '发送验证码失败',
             icon: 'none',
             duration: 2000
-          })
+          });
+          this.setData({
+            disableCode: false
+          });
         },
         complete: function (res) {
           wx.hideLoading();
@@ -121,7 +132,10 @@ Page({
         title: '请输入正确的手机号码',
         icon: 'none',
         duration: 2000
-      })
+      });
+      this.setData({
+        disableCode: false
+      });
     }
   },
   getInput: function (e) {
