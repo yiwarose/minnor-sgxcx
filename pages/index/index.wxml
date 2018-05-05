@@ -1,14 +1,41 @@
 <!--index.wxml-->
 <view class="container">
-
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" size="mini" type="primary" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取用户信息 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    <block wx:if="{{!phone}}">
+        <view style="text-align:center" class="gray">
+          <!--text></text-->
+        </view>
+        <view class="margin10 form-row" style="justify-content:space-between;">
+        <view class="row">
+          <view><text class="label">手机号</text></view>
+          <view><input type="number" placeholder="请输入手机号" bindinput="getInput" maxlength="11" class="input" id="phone" name="phone"/>
+          </view>
+        </view>
+        <view>
+        <button bindtap="requestCode" disabled="{{disableCode}}" type="primary" class="input-button">{{getCode}}  </button>
+        </view>
+      </view>
+      <view class="form-row">
+        <view><text class="label">验证码</text></view>
+        <view>
+        <input type="number" placeholder="请输入验证码" bindinput="getInput" maxlength="6" class="input" id="code" name="code"/>
+        </view>
+      </view>
+      <view class="margin10 container">
+        <button formType="submit" type="primary">提交</button>
+      </view>
+      <view class="margin20 gray line24 tcenter font12">
+        <text style="margin-top:-20px;">仅供行业用户使用</text>
+      </view>
     </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+    <block wx:if="{{phone && !hasPermission}}">
+    <view  class="margin40 tcenter">
+        <icon type="waiting" size="40"/>
+      </view>
+      <view style="text-align:center" class="margin10">
+        <text>暂无授权</text>
+      </view>
+      <view class="margin20 gray font12 tcenter">
+        <text>仅供行业用户使用</text>
+      </view>
+    </block>
 </view>

@@ -1,18 +1,34 @@
 //app.js
 App({
   onLaunch: function () {
+
+    this.wxLogIn();
     // 展示本地存储能力
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    //var logs = wx.getStorageSync('logs') || []
+    //logs.unshift(Date.now())
+    //wx.setStorageSync('logs', logs);
+    /*var sessionTime = wx.getStorageSync('sessionTime')||false;
+    if(sessionTime==false){
+      console.log('No Session');
+      this.wxLogIn();
+    }else{
+      console.log('Has Session');
+      var currentTime=Date.now();
+      var diff=currentTime-sessionTime;
+      diff = Math.floor(diff / (24 * 3600 * 1000));
+      if(diff>=1){
+        console.log('Login Again');
+        this.wxLogIn();
+      }else{
+        this.wxLogIn();
+        console.log('Unnecessary');
+      }
+    }*/
 
     // 登录
-    wx.login({
+    /*wx.login({
       success: res => {
         this.globalData.resCode=res.code;
-        //console.log('login');
-        //this.globalData.encryptedData = res.encryptedData;
-        //console.log(res);
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
@@ -25,9 +41,6 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
-              this.globalData.encryptedData = res.encryptedData;
-              this.globalData.iv = res.iv;
-              this.checkRegistered();
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
               if (this.userInfoReadyCallback) {
@@ -36,41 +49,58 @@ App({
             }
           })
         }else{
-          //no action..
         }
+      }
+    })*/
+  },
+  wxLogIn:function(){
+    wx.showLoading({
+      title: '数据加载中...',
+    })
+    wx.login({
+      success: res => {
+        this.globalData.resCode = res.code;
+        this.getMiniAppUser();
+        //console.log(res.code);
       }
     })
   },
   globalData: {
     userInfo: null,
-    serverURL:'https://sgxcx.minnor.cn/index.php/sgminiapps/',
+    serverUrl:'https://sgxcx.minnor.cn/index.php/sgminiapps/',
     resCode:'',
-    encryptedData:'',
-    iv:''
+    phone:'',
+    hasPermission:'',
   },
-  checkRegistered: function () {
-    wx.request({ //判断微信用户是否已经绑定了手机号
-      url: this.globalData.serverURL + 'getunionid',
+  getMiniAppUser: function () {
+    wx.request({
+      url: this.globalData.serverUrl + 'getuser',
       method: 'POST',
       data: {
-        code: this.globalData.resCode,
-        data: this.globalData.encryptedData,
-        iv: this.globalData.iv
+        code: this.globalData.resCode
       },
       header: {
         'content-type': 'application/json'
       },
       success: function (res) {
-        console.log(res.data);
+        //console.log(res.data);
+        var app = getApp();
         if (res.data.code == 0) {
-        } else if (res.data.code == 1) {
+          //wx.setStorageSync("sessionTime", Date.now());
+          app.globalData.phone = res.data.message.phone;
+          app.globalData.hasPermission = res.data.message.hasPermission;
+          wx.setStorageSync('phone', app.globalData.phone);
+          wx.setStorageSync('hasPermission', app.globalData.hasPermission);
         } else {
+          app.showModal('验证用户信息失败:'+res.data.message);
         }
       },
       fail: function (res) {
         console.log(res);
       },
       complete: function (res) {
+        wx.hideLoading();
+        //console.log('app done');
       }
     });
   },
@@ -84,7 +114,7 @@ App({
     wx.setNavigationBarTitle({
       title: txt,
       success:function(){
-        console.log("set title as "+txt);
+        console.log("Set Title As "+txt);
       }  
     }); 
   },
