@@ -1,4 +1,4 @@
-//index.js
+import WxValidate from '../../utils/WxValidate';
 //获取应用实例
 const app = getApp()
 Page({
@@ -14,7 +14,9 @@ Page({
     code:'',
     disableCode:false,
     note:'此应用仅供行业用户使用',
-    noPermission:'暂无授权'
+    noPermission:'暂无授权',
+    registered:false,
+    registeredNoPermission:'您已注册成功\r\n\r\n请等待管理员为您授权'
   },
   //事件处理函数
   /*bindViewTap: function() {
@@ -23,6 +25,7 @@ Page({
     })
   },*/
   onLoad: function () {
+    this.initValidate();
     var _this=this;
     //app.setTitle('铭朗监控');
     wx.getStorage({
@@ -31,6 +34,20 @@ Page({
         _this.setData({
           phone:res.data
         });
+      },
+    });
+    wx.getStorage({
+      key: 'hasPermission',
+      success: function (res) {
+        _this.setData({
+          hasPermission: res.data
+        });
+
+        if(_this.data.hasPermission){
+          wx.switchTab({
+            url: '../home/home',
+          })
+        }
       },
     });
     /*if (app.globalData.userInfo) {
@@ -150,6 +167,96 @@ Page({
       })
     }
   },
+  goHome:function(){
+    wx.switchTab({
+      url: '../home/home',
+    })
+  },
+  initValidate: function () {
+    const rules = {
+      phone: {
+        required: true,
+        tel: true,
+      },
+      code: {
+        required: true,
+        digits: true,
+        min: 6,
+      }
+    }
+    const messages = {
+      phone: {
+        required: '请输入正确的手机号',
+        tel: '请输入正确的手机号',
+      },
+      code: {
+        required: '请输入验证码',
+        digits: '验证码必须是数字',
+        min: '验证码有6个数字',
+      }
+    }
+    this.WxValidate = new WxValidate(rules, messages);
+  },
+  checkUser:function(e){
+    var _this=this;
+    if (!this.WxValidate.checkForm(e)) {
+      const error = this.WxValidate.errorList[0]
+      app.showModal(error.msg)
+      return false
+    }
+    wx.showLoading();
+    wx.request({
+      url: app.globalData.serverUrl + 'checkuser',
+      method: 'POST',
+      data: {
+        'phone': _this.data.inputPhone,
+        'code':_this.data.code,
+        'openId':app.globalData.openId
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res.data);
+        if (res.data.code == 0) {
+          wx.hideLoading();
+          wx.switchTab({
+            url: '../home/home',
+          })
+        }else if(res.data.code==1){
+          wx.hideLoading();
+          _this.setData({
+            registered: true
+          });
+        } else if(res.data.code==-2){
+          wx.showToast({
+            title: '验证码错误',
+            image:'../../images/error.png',
+            duration: 2000
+          });
+        }else{
+          wx.showToast({
+            title: res.data.message,
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      },
+      error: function (res) {
+        wx.showToast({
+          title: '发送验证码失败',
+          icon: 'none',
+          duration: 2000
+        });
+        this.setData({
+          disableCode: false
+        });
+      },
+      complete: function (res) {
+        
+      }
+    });
+  }
   /*
   getUserInfo: function(e) {
     app.globalData.userInfo = e.detail.userInfo

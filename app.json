@@ -1,8 +1,11 @@
 {
   "pages": [
+    "pages/check/check",
     "pages/home/home",
     "pages/logs/logs",
-    "pages/index/index"
+    "pages/message/message",
+    "pages/report/report",
+    "pages/setting/setting"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -11,23 +14,35 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#a9b7b7",
-    "selectedColor": "#11cd6e",
+    "color": "#b2b2b2",
+    "selectedColor": "#09bb07",
+    "backgroundColor":"#fff",
     "borderStyle": "black",
     "list": [
       {
-        "selectedIconPath": "images/icon_consult_press.png",
-        "iconPath": "images/icon_consult.png",
-        "pagePath": "pages/index/index",
-        "text": "首页"  
-
+        "selectedIconPath": "images/site_active.png",
+        "iconPath": "images/site.png",
+        "pagePath": "pages/home/home",
+        "text": "站点"
       },
       {
-        "selectedIconPath": "images/icon_invest_press.png",
-        "iconPath": "images/icon_invest.png",
-        "pagePath": "pages/logs/logs",
-        "text": "一元投"  
+        "selectedIconPath": "images/alarm_active.png",
+        "iconPath": "images/alarm.png",
+        "pagePath": "pages/message/message",
+        "text": "信息"
+      },
+      {
+        "selectedIconPath": "images/report_active.png",
+        "iconPath": "images/report.png",
+        "pagePath": "pages/report/report",
+        "text": "报表"
+      },
+      {
+        "selectedIconPath": "images/setting_active.png",
+        "iconPath": "images/setting.png",
+        "pagePath": "pages/setting/setting",
+        "text": "我的"
       }
-    ]  
+    ]
   }
 }

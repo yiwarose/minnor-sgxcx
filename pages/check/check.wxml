@@ -1,6 +1,6 @@
-<!--index.wxml-->
+<form bindsubmit="checkUser">
 <view class="container">
-    <block wx:if="{{!phone}}">
+    <block wx:if="{{!phone && !registered &&!hasPermission}}">
         <view style="text-align:center" class="gray">
           <!--text></text-->
         </view>
@@ -27,15 +27,24 @@
         <text style="margin-top:-20px;">{{note}}</text>
       </view>
     </block>
-    <block wx:if="{{phone && !hasPermission}}">
+    <block wx:if="{{phone && !hasPermission&&!registered}}">
     <view  class="margin40 tcenter">
-        <icon type="waiting" size="40"/>
+        <icon type="warn" size="40"/>
       </view>
-      <view style="text-align:center" class="margin10">
+      <view class="margin10 tcenter">
         <text>{{noPermission}}</text>
       </view>
       <view class="margin20 gray font12 tcenter">
         <text>{{note}}</text>
       </view>
     </block>
+    <block wx:if="{{registered}}">
+    <view  class="margin40 tcenter">
+        <icon type="waiting" size="40"/>
+      </view>
+      <view class="margin20 gray font12 tcenter">
+        <text>{{registeredNoPermission}}</text>
+      </view>
+    </block>
 </view>
+</form>

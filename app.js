@@ -71,6 +71,7 @@ App({
     resCode:'',
     phone:'',
     hasPermission:'',
+    openId:''
   },
   getMiniAppUser: function () {
     wx.request({
@@ -83,14 +84,17 @@ App({
         'content-type': 'application/json'
       },
       success: function (res) {
-        //console.log(res.data);
+        console.log(res.data);
         var app = getApp();
         if (res.data.code == 0) {
           //wx.setStorageSync("sessionTime", Date.now());
           app.globalData.phone = res.data.message.phone;
           app.globalData.hasPermission = res.data.message.hasPermission;
+          app.globalData.openId=res.data.message.openId;
           wx.setStorageSync('phone', app.globalData.phone);
           wx.setStorageSync('hasPermission', app.globalData.hasPermission);
+          wx.setStorageSync('token',app.globalData.hasPermission);
+          console.log('Get user info done');
         } else {
           app.showModal('验证用户信息失败:'+res.data.message);
         }
