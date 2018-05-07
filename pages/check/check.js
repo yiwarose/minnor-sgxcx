@@ -29,24 +29,17 @@ Page({
     var _this=this;
     //app.setTitle('铭朗监控');
     wx.getStorage({
-      key: 'phone',
+      key: 'userData',
       success: function(res) {
+        //console.log(res.data.phone);
         _this.setData({
-          phone:res.data
+          phone:res.data.phone,
+          hasPermission:res.data.hasPermission
         });
-      },
-    });
-    wx.getStorage({
-      key: 'hasPermission',
-      success: function (res) {
-        _this.setData({
-          hasPermission: res.data
-        });
-
         if(_this.data.hasPermission){
           wx.switchTab({
             url: '../home/home',
-          })
+          });
         }
       },
     });
@@ -76,6 +69,9 @@ Page({
         }
       })
     }*/
+  },
+  onReady:function(){
+    //console.log('ready');
   },
   countDown: function () {
     let timing = 60

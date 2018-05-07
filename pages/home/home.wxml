@@ -1,2 +1,25 @@
-<!--pages/home/home.wxml-->
-<text>pages/home/home.wxml</text>
+<view class="search">
+  <view class="searchItem">
+  <i class="fa fa-search"></i>
+  <input placeholder="{{searchPlaceHolder}}" bindinput="searchConfirm" placeholder-class='search-placeholder'/>
+  </view>
+</view>
+<view class="container" style="padding-top:0px;">
+  <view class="flex-wrp list" wx:for="{{sites}}" wx:key="unique" wx:for-item="item">
+    <view class="flex-item list-icon"><image src="../../images/{{item.fd_type}}.png"/></view>
+    <view class="flex-item" style="width:85%;">
+      <view class="list-text">
+        <view class="flex-item font14 height20">{{item.fd_name}}</view>
+        <view class="flex-item font12 gray height20">{{item.fd_memo}}</view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+      <i class="fa fa-angle-right fa-fw gray"></i>
+    </view>
+  </view>
+</view>
+<block wx:if="{{sites.length==0}}">
+<view class="container">
+    <view class="margin20 font12 tcenter gray">{{noResult}}</view>
+</view>
+</block>

@@ -1,4 +1,7 @@
 /**app.wxss**/
+/* pages/home/home.wxss */
+@import "lib/weui.wxss";
+.flex-wrp {display: flex;}
 page{
   background-color:white;
   /* font-size:12px; */
@@ -63,6 +66,9 @@ page{
 .font12{
   font-size:12px;
 }
+.font14{
+  font-size:14px;
+}
 .line24{
   line-height: 24px;
 }
@@ -113,6 +119,60 @@ page{
 }
 .tcenter{
   text-align: center;
+}
+.list{
+  height:50px;
+  border-bottom:1px solid #eee;
+  line-height: 30px;
+  flex-direction:row;
+}
+.list-icon{
+  width:25px;
+  height:20px;
+}
+.list-icon image{
+  width:15px;
+  height:15px;
+  margin-top:20px;
+}
+.list-text{
+  flex-direction:column;height:50px;
+}
+.height20{
+  height:20px;
+}
+.color-red{
+  color:red;
+}
+view.search{
+  height:20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding:5px;
+  padding-left:10px;
+  padding-right:10px;
+  
+}
+view.searchItem {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    border-radius: 5px;
+    border:1px solid #eee;
+}
+view.searchItem i {
+    align-self: center;
+    margin-left:5px;
+    margin-right:10px;
+    color:#ddd;
+}
+view.searchItem input {
+    flex: 1;
+    font-size:12px;
+}
+.search-placeholder{
+  color:#ddd;
 }
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome

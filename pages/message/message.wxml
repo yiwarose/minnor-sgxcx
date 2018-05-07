@@ -1,2 +1,24 @@
-<!--pages/message/message.wxml-->
-<text>pages/message/message.wxml</text>
+<view class="search">
+  <view class="searchItem">
+  <i class="fa fa-search"></i>
+  <input placeholder="{{searchPlaceHolder}}" bindinput="searchConfirm" placeholder-class='search-placeholder'/>
+  </view>
+</view>
+<view class="container" style="padding-top:0px;">
+  <view class="flex-wrp list" wx:for="{{message}}" wx:key="unique" wx:for-item="item">
+    <view class="flex-item" style="width:95%;">
+      <view class="list-text wx:if(item.isread==0) color-red">
+        <view class="flex-item font14 height20">{{item.fd_description}}...</view>
+        <view class="flex-item font12 gray height20">{{item.fd_name}} {{item.fd_time}}</view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+      <i class="fa fa-angle-right fa-fw gray"></i>
+    </view>
+  </view>
+</view>
+<block wx:if="{{message.length==0}}">
+<view class="container">
+    <view class="margin20 font12 tcenter gray">{{noResult}}</view>
+</view>
+</block>
