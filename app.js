@@ -61,7 +61,7 @@ App({
       success: res => {
         this.globalData.resCode = res.code;
         this.getMiniAppUser();
-        //console.log(res.code);
+        console.log(res);
       }
     })
   },
@@ -106,7 +106,7 @@ App({
         }
       },
       fail: function (res) {
-        console.log(res);
+        app.showModal('验证用户信息失败:' + res);
       },
       complete: function (res) {
         wx.hideLoading();

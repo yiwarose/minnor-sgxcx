@@ -1,2 +1,28 @@
-<!--pages/setting/setting.wxml-->
-<text>pages/setting/setting.wxml</text>
+<view class="" wx:if="{{hasUserInfo}}">
+  <view class="row margin10 bgf7" style="height:50px;">
+  <view class="container" style="width:100%;">
+    <view class="flex-wrp list" bindtap='goToSiteDetail' style="width:100%;border:none;">
+      <view class="flex-item avatar-icon">
+        <image wx:if="{{userInfo.avatarUrl.length>0}}" src="{{userInfo.avatarUrl}}"/>
+      </view>
+      <view class="flex-item" style="width:80%;">
+        <view class="list-text">
+          <view class="flex-item font12 height20">{{userData.phone}}</view>
+          <view class="flex-item font10 gray height20">{{userInfo.nickName}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </view>
+</view>
+    <block wx:if="{{!hasUserInfo}}">
+      <view  class="margin40">
+        <!--icon type="warn" size="40" color="gray"/-->
+        <view class="container tcenter">
+          <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" size="mini" type="warn">{{getUserInfoBtn}}</button>
+        </view>
+      </view>
+      <view class="margin20 gray font10 tcenter">
+        <text>{{userInfoTxt}}</text>
+      </view>
+    </block>

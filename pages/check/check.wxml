@@ -39,7 +39,7 @@
       </view>
     </block>
     <block wx:if="{{registered}}">
-    <view  class="margin40 tcenter">
+      <view  class="margin40 tcenter">
         <icon type="waiting" size="40"/>
       </view>
       <view class="margin20 gray font12 tcenter">

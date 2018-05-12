@@ -1,0 +1,63 @@
+<view class="tcenter gray font14">
+  <text>{{reportTitle}}</text>
+</view>
+<view class="container" style="padding-left:0px;">
+<canvas canvas-id="lineCanvas" style="height:200px;width:100%;" bindtouchstart="touchHandler"></canvas>
+</view>
+<block wx:if="{{devices.length>0}}">
+<view class="container">
+<view style="border:1px solid #eee;border-bottom:none;">
+<view class="flex-wrp list list-title">
+  <view class="flex-item list-icon">
+        <image src="../../images/list.png" style="margin-top:13px;"/>
+  </view>
+  <view class="flex-item gray font12" style="width:80%;height:40px;line-height:40px;">
+      {{deviceListTxt}}
+  </view>
+  <view class="flex-item list-icon" bindtap='refresh'>
+    <image src="../../images/refresh.png" style="margin-top:13px;"/>
+  </view>
+</view>
+<view style="padding:0px;margin:0px;margin-top:0px;" class="">
+  <view class="flex-wrp list" wx:for="{{devices}}" wx:key="unique" wx:for-item="item">
+    <view class="flex-item list-icon">
+        <image src="../../images/{{item.fd_showimage}}.png"/>
+    </view>
+    <view class="flex-item" style="width:80%;">
+      <view class="list-text">
+        <view class="flex-item font14 height20">{{item.fd_devicename}}</view>
+        <view class="flex-item font12 gray height20">{{item.fd_value}}
+        <block wx:if="{{item.fd_value!='暂无数据'}}">
+            {{item.fd_unit}}
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+      <block wx:if="{{item.fd_devicetypeid=='pump1y' || item.fd_devicetypeid=='pump2y' || item.fd_devicetypeid=='fany'}}">
+      <block wx:if="{{item.fd_value=='On'}}">
+        <switch checked bindchange="switchDevice" data-deviceid="{{item.fd_devicetypeid}}" data-devicename="{{item.fd_devicename}}"/>
+      </block> 
+      <block wx:if="{{item.fd_value=='Off'}}">
+        <switch  bindchange="switchDevice" data-deviceid="{{item.fd_devicetypeid}}" data-devicename="{{item.fd_devicename}}"/>
+      </block>
+      </block>
+    </view>
+  </view>
+  <view class="flex-wrp list">
+    <view class="flex-item list-icon"><image src="../../images/clock.png"/></view>
+    <view class="flex-item" style="width:80%;">
+      <view class="list-text">
+        <view class="flex-item font14 height20">{{timingTxt}}</view>
+        <view class="flex-item font12 gray height20">{{dataTime}}</view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+    </view>
+  </view>
+</view>
+</view>
+</view>
+</block>
+<block wx:if="{{devices.length==0}}">
+</block>

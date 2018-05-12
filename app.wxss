@@ -63,6 +63,9 @@ page{
 .margin10{
   margin-top:10px;
 }
+.font10{
+  font-size:10px;
+}
 .font12{
   font-size:12px;
 }
@@ -126,14 +129,29 @@ page{
   line-height: 30px;
   flex-direction:row;
 }
+.list-title{
+  background-color:#f7f7f7;height:40px;
+}
 .list-icon{
-  width:25px;
+  width:35px;
   height:20px;
 }
 .list-icon image{
   width:15px;
   height:15px;
   margin-top:20px;
+  margin-left:10px;
+}
+
+.avatar-icon{
+  width:50px;
+  height:40px;
+}
+.avatar-icon image{
+  width:40px;
+  height:40px;
+  margin-top:5px;
+  margin-left:5px;
 }
 .list-text{
   flex-direction:column;height:50px;
@@ -174,6 +192,10 @@ view.searchItem input {
 .search-placeholder{
   color:#ddd;
 }
+.bgf7{
+  background-color: #f7f7f7;
+}
+
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
   *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

@@ -5,9 +5,14 @@
   </view>
 </view>
 <view class="container" style="padding-top:0px;">
-  <view class="flex-wrp list" wx:for="{{message}}" wx:key="unique" wx:for-item="item">
+  <view class="flex-wrp list" wx:for="{{message}}" wx:key="unique" wx:for-item="item"  bindtap='goToMessageDetail' data-id="{{item.fd_id}}">
     <view class="flex-item" style="width:95%;">
-      <view class="list-text wx:if(item.isread==0) color-red">
+      <view wx:if="{{item.isread==0}}" class="list-text color-red">
+        <view class="flex-item font14 height20">{{item.fd_description}}...</view>
+        <view class="flex-item font12 gray height20">{{item.fd_name}} {{item.fd_time}}</view>
+      </view>
+
+      <view wx:if="{{item.isread==1}}" class="list-text">
         <view class="flex-item font14 height20">{{item.fd_description}}...</view>
         <view class="flex-item font12 gray height20">{{item.fd_name}} {{item.fd_time}}</view>
       </view>

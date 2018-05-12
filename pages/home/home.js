@@ -53,8 +53,10 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    //console.log('pull down');
-    //this.getSites(this.data.userData.phone, this.data.userData.token);
+    console.log('pull down');
+    //wx.showNavigationBarLoading();
+    this.getSites(this.data.userData.phone,this.data.userData.token);
+    wx.stopPullDownRefresh();
   },
 
   /**
@@ -97,11 +99,13 @@ Page({
         wx.hideLoading();
         wx.showToast({
           title: '本地数据错误:'+res.data,
-          duration:5000
+          duration:5000,
+          icon: 'none'
         })
       },
       complete:function(){
         //wx.hideLoading();
+        
       }
     })
   },
@@ -122,17 +126,43 @@ Page({
         'content-type': 'application/json'
       },
       success: function (res) {
-        _this.setData({
-          sites:res.data.message
-        });
+        if(res.data.code==0){
+          wx.hideLoading();
+          _this.setData({
+            sites: res.data.message
+          });
+        }else if(res.data.code==-2){
+          wx.showToast({
+            title: '参数异常，请登录后重试',
+            duration:5000,
+            icon: 'none'
+          })
+        }else{
+          wx.showToast({
+            title: '加载失败,下拉页面重新加载',
+            duration: 2000,
+            icon:'none'
+          })
+        }
         //console.log(res.data);
       },
       fail: function (res) {
         console.log(res);
+        wx.showToast({
+          title: '加载失败,下拉页面重新加载',
+          duration: 2000,
+          icon: 'none'
+        })
       },
       complete: function (res) {
-        wx.hideLoading();
+        //wx.hideLoading();
       }
     });
+  }
+  ,goToSiteDetail:function(e){
+    //console.log(e.currentTarget.dataset);
+    wx.navigateTo({
+      url: '../siteDetail/siteDetail?siteNo='+e.currentTarget.dataset.siteno+'&siteName='+e.currentTarget.dataset.sitename,
+    })
   }
 })

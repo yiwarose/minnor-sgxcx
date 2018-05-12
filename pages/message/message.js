@@ -27,7 +27,12 @@ Page({
   onReady: function () {
   
   },
-
+  goToMessageDetail:function (e) {
+    //console.log(e.currentTarget.dataset);
+    wx.navigateTo({
+      url: '../messageDetail/messageDetail?id=' + e.currentTarget.dataset.id,
+    })
+  },
   /**
    * 生命周期函数--监听页面显示
    */
@@ -53,7 +58,8 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    this.getMessage(this.data.userData.phone, this.data.userData.token);
+    wx.stopPullDownRefresh();
   },
 
   /**
@@ -96,7 +102,8 @@ Page({
         wx.hideLoading();
         wx.showToast({
           title: '本地数据错误:' + res.data,
-          duration: 5000
+          duration: 5000,
+          icon: 'none'
         })
       },
       complete: function () {
@@ -123,14 +130,32 @@ Page({
         'content-type': 'application/json'
       },
       success: function (res) {
-        _this.setData({
-          message: res.data.message
-        });
+        if(res.data.code==0){
+          _this.setData({
+            message: res.data.message
+          });
+        } else if (res.data.code == -1) {
+          wx.showToast({
+            title: '发送失败:' + res.data.message,
+            duration: 5000,
+            icon: 'none'
+          })
+        } else if (res.data.code == -2) {
+          wx.showToast({
+            title: '发现另外一台设备登录，请重新登录',
+            duration: 5000,
+            icon: 'none'
+          })
+        }
         console.log(res.data);
         wx.hideLoading();
       },
       fail: function (res) {
-        console.log(res);
+        wx.showToast({
+          title: 'error:' + res,
+          duration: 5000,
+          icon: 'none'
+        })
       },
       complete: function (res) {
         
