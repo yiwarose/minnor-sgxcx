@@ -1,4 +1,4 @@
-<form bindsubmit="checkUser">
+<form bindsubmit="checkUser" report-submit="true">
 <view class="container">
     <block wx:if="{{!phone && !registered &&!hasPermission}}">
         <view style="text-align:center" class="gray">

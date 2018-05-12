@@ -1,2 +1,26 @@
-<!--pages/report/report.wxml-->
-<text>pages/report/report.wxml</text>
+<view class="container" style="padding-top:0px;">
+  <view class="flex-wrp list">
+    <view class="flex-item list-icon"><image src="../../images/report_active.png"/></view>
+    <view class="flex-item" style="width:85%;">
+      <view class="list-text">
+        <view class="flex-item font14 height20">{{report1}}</view>
+        <view class="flex-item font12 gray height20">{{report1_detail}}</view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+      <i class="fa fa-angle-right fa-fw gray"></i>
+    </view>
+  </view>
+    <view class="flex-wrp list">
+    <view class="flex-item list-icon"><image src="../../images/alarm_active.png"/></view>
+    <view class="flex-item" style="width:85%;">
+      <view class="list-text">
+        <view class="flex-item font14 height20">{{report2}}</view>
+        <view class="flex-item font12 gray height20">{{report2_detail}}</view>
+      </view>
+    </view>
+    <view class="flex-item" style="line-height:50px;">
+      <i class="fa fa-angle-right fa-fw gray"></i>
+    </view>
+  </view>
+</view>

@@ -15,7 +15,6 @@ Page({
     hasUserInfo:false,
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -33,14 +32,12 @@ Page({
     wx.getStorage({
       key: 'userInfo',
       success: function(res) {
+        console.log(res.data);
         _this.setData({
           userInfo: res.data,
           hasUserInfo: true
         });
-        wx.removeStorage({
-          key: 'userInfo',
-          success: function(res) {},
-        })
+        //wx.removeStorageSync('userInfo');
       },
       fail:function(res){
         console.log(res);
@@ -96,26 +93,55 @@ Page({
   onShareAppMessage: function () {
   
   }
+  ,saveUserInfo:function(){
+    console.log(this.data.userInfo);
+    var _this=this;
+    wx.request({
+      url: app.globalData.serverUrl + 'saveuserinfo',
+      method: 'POST',
+      data: {
+        phone: _this.data.userData.phone,
+        token: _this.data.userData.token,
+        userinfo:_this.data.userInfo
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res);
+      },
+      fail: function (res) {
+        console.log(res);
+      },
+      complete: function (res) {
+      }
+    });
+  }
   ,getUserInfo: function (e) {
     console.log(e.detail);
+    var _this=this;
     if(e.detail.errMsg.indexOf('ok')>=0){
-      this.setData({
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        nickName:e.detail.userInfo.nickName,
+      _this.setData({
+        userInfo:e.detail.userInfo,
+        hasUserInfo:true
       });
-      var userInfo = {};
-      userInfo['avatarUrl'] = this.data.avatarUrl;
-      userInfo['nickName'] = this.data.nickName;
-      wx.setStorageSync('userInfo', userInfo);
-      this.setData({
-        hasUserInfo: true
+      wx.setStorage({
+        key: 'userInfo',
+        data: _this.data.userInfo,
       });
-
+      _this.saveUserInfo();
     }else{
       wx.showToast({
         title: '获取用户信息失败:'+e.detail.errMsg,
         icon:'none'
       })
     }
+  }
+  , showCompany:function(){
+    wx.showModal({
+      //title: '关于我们',
+      content: '我们专注隧道、站房、市政设施的环境监控',
+      showCancel:false
+    })
   }
 })

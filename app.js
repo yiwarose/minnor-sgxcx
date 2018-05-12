@@ -100,6 +100,8 @@ App({
 
           wx.setStorageSync('userData', userData);
 
+          console.log(userData);
+
           console.log('Get user info done');
         } else {
           app.showModal('验证用户信息失败:'+res.data.message);

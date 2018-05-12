@@ -1,18 +1,23 @@
 // pages/report/report.js
+const app=getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-  
+    title:'报表',
+    report1:'启停次数、运行时长',
+    report1_detail:'统计单位时间内水泵启停次数和运行时间',
+    report2: '故障统计',
+    report2_detail: '统计单位时间内各类型故障发生次数'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    app.setTitle(this.data.title);
   },
 
   /**

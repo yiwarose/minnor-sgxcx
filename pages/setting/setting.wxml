@@ -1,9 +1,21 @@
-<view class="" wx:if="{{hasUserInfo}}">
+<view wx:if="{{!hasUserInfo && canIUse}}">
+      <view  class="margin40">
+        <view class="container tcenter">
+          <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" size="mini" type="warn">{{getUserInfoBtn}}</button>
+        </view>
+      </view>
+      <view class="margin20 gray font10 tcenter">
+        <text>{{userInfoTxt}}</text>
+      </view>
+      </view>
+      <block wx:else>
+
+      <view class="">
   <view class="row margin10 bgf7" style="height:50px;">
   <view class="container" style="width:100%;">
-    <view class="flex-wrp list" bindtap='goToSiteDetail' style="width:100%;border:none;">
+    <view class="flex-wrp list" style="width:100%;border:none;">
       <view class="flex-item avatar-icon">
-        <image wx:if="{{userInfo.avatarUrl.length>0}}" src="{{userInfo.avatarUrl}}"/>
+        <image src="{{userInfo.avatarUrl}}"/>
       </view>
       <view class="flex-item" style="width:80%;">
         <view class="list-text">
@@ -15,14 +27,13 @@
   </view>
   </view>
 </view>
-    <block wx:if="{{!hasUserInfo}}">
-      <view  class="margin40">
-        <!--icon type="warn" size="40" color="gray"/-->
-        <view class="container tcenter">
-          <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" size="mini" type="warn">{{getUserInfoBtn}}</button>
-        </view>
-      </view>
-      <view class="margin20 gray font10 tcenter">
-        <text>{{userInfoTxt}}</text>
-      </view>
-    </block>
+
+<view class="flex-wrp list bgf7 margin10" style="height:40px;border:none;">
+  <view class="flex-item list-icon">
+        <image src="../../images/list.png" style="margin-top:13px;"/>
+  </view>
+  <view class="flex-item font12 gray" style="width:80%;line-height:40px;">
+      当前版本:1.0.0
+  </view>
+</view>
+</block>
