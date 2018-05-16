@@ -13,65 +13,46 @@ Page({
     inputPhone:'',
     code:'',
     disableCode:false,
-    note:'此应用仅供行业用户使用',
+    note:'此应用仅供授权用户使用',
     noPermission:'暂无授权',
     registered:false,
-    registeredNoPermission:'您已注册成功\r\n\r\n请等待管理员为您授权'
+    registeredNoPermission:'您已注册成功\r\n\r\n请等待管理员为您授权',
+    userInfoReady:false
   },
-  //事件处理函数
-  /*bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },*/
   onLoad: function () {
     this.initValidate();
     var _this=this;
-    //app.setTitle('铭朗监控');
-    wx.getStorage({
-      key: 'userData',
-      success: function(res) {
-        //console.log(res.data.phone);
-        _this.setData({
-          phone:res.data.phone,
-          hasPermission:res.data.hasPermission
-        });
-        if(_this.data.hasPermission){
-          wx.switchTab({
-            url: '../home/home',
-          });
-        }
-      },
-    });
-    /*if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
+    app.setTitle('铭朗监控');
+    _this.callUserInfo();
+  },
+  callUserInfo:function(){
+    var _this=this;
+    let time = setInterval(() => {
+      console.log(app.globalData.userInfoReady);
+      if(app.globalData.userInfoReady){
+        clearInterval(time);
+        _this.goAhead();
       }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }*/
+    }, 1000);
+
+  },
+  goAhead:function(){
+    var _this=this;
+    if(app.globalData.userInfoReady){
+      _this.setData({
+        phone: app.globalData.phone,
+        hasPermission: app.globalData.hasPermission,
+        userInfoReady:true
+      });
+    }
+    if (_this.data.hasPermission) {
+      _this.goHome();
+    }
   },
   onReady:function(){
-    //console.log('ready');
+    console.log('ready');
+    this.goAhead();
+    //wx.hideLoading();
   },
   countDown: function () {
     let timing = 60
@@ -215,11 +196,14 @@ Page({
       success: function (res) {
         console.log(res.data);
         if (res.data.code == 0) {
+          app.globalData.hasPermission=res.data.message;
+          app.globalData.phone=_this.data.inputPhone;
           wx.hideLoading();
           wx.switchTab({
             url: '../home/home',
           })
         }else if(res.data.code==1){
+          app.setTitle('等待授权');
           wx.hideLoading();
           _this.setData({
             registered: true
@@ -253,12 +237,4 @@ Page({
       }
     });
   }
-  /*
-  getUserInfo: function(e) {
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  }*/
 })

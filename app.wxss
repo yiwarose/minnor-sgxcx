@@ -60,6 +60,9 @@ page{
 .margin20{
   margin-top:20px;
 }
+.margin3{
+  margin-top:3px;
+}
 .margin10{
   margin-top:10px;
 }

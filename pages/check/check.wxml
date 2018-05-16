@@ -1,6 +1,6 @@
 <form bindsubmit="checkUser" report-submit="true">
 <view class="container">
-    <block wx:if="{{!phone && !registered &&!hasPermission}}">
+    <block wx:if="{{!phone && !registered &&!hasPermission && userInfoReady}}">
         <view style="text-align:center" class="gray">
           <!--text></text-->
         </view>
@@ -27,23 +27,31 @@
         <text style="margin-top:-20px;">{{note}}</text>
       </view>
     </block>
-    <block wx:if="{{phone && !hasPermission&&!registered}}">
+    <block wx:if="{{phone && !hasPermission&&!registered&& userInfoReady}}">
     <view  class="margin40 tcenter">
         <icon type="warn" size="40"/>
       </view>
       <view class="margin10 tcenter">
-        <text>{{noPermission}}</text>
+        <text class="gray font12">{{noPermission}}</text>
       </view>
-      <view class="margin20 gray font12 tcenter">
-        <text>{{note}}</text>
+      <view class="margin20 font12 tcenter">
+        <text class="gray font10">{{note}}</text>
       </view>
     </block>
-    <block wx:if="{{registered}}">
+    <block wx:if="{{registered&& userInfoReady}}">
       <view  class="margin40 tcenter">
         <icon type="waiting" size="40"/>
       </view>
-      <view class="margin20 gray font12 tcenter">
-        <text>{{registeredNoPermission}}</text>
+      <view class="margin20 font12 tcenter">
+        <text class="gray font12">{{registeredNoPermission}}</text>
+      </view>
+    </block>
+    <block wx:if="{{!userInfoReady}}">
+      <view  class="margin40 tcenter">
+        <i class="fa fa-cog fa-spin fa-3x" style="color:#09bb07;"></i>
+      </view>
+      <view class="margin10 tcenter">
+        <text class="gray font12">加载中...</text>
       </view>
     </block>
 </view>

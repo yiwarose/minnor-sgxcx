@@ -21,7 +21,7 @@ Page({
     this.setData({
       alarmId: options.id
     });
-    this.getStorage();
+    this.getDetail();
     
 
   },
@@ -31,8 +31,8 @@ Page({
       url: app.globalData.serverUrl + 'ackalarm',
       method: 'POST',
       data: {
-        phone: _this.data.userData.phone,
-        token: _this.data.userData.token,
+        phone: app.globalData.phone,
+        token: app.globalData.hasPermission,
         id: _this.data.alarmId
       },
       header: {
@@ -49,43 +49,17 @@ Page({
       }
     });
   },
-  getStorage: function () {
-    var _this = this;
+  getDetail: function () {
     wx.showLoading({
       title: '数据加载中...',
-    })
-    wx.getStorage({
-      key: 'userData',
-      success: function (res) {
-        _this.setData({
-          userData: res.data,
-        });
-        //wx.hideLoading();
-        _this.getDetail(_this.data.userData.phone, _this.data.userData.token);
-      },
-      fail: function (res) {
-        // wx.hideLoading();
-        wx.showToast({
-          title: '本地数据错误:' + res.data,
-          duration: 5000
-        })
-      },
-      complete: function () {
-        //wx.hideLoading();
-      }
-    })
-  },
-  getDetail: function (phone, token) {
-    wx.showLoading({
-      title: '信息加载中...',
     })
     var _this = this;
     wx.request({
       url: app.globalData.serverUrl + 'alarmdetail',
       method: 'POST',
       data: {
-        phone: phone,
-        token: token,
+        phone: app.globalData.phone,
+        token: app.globalData.hasPermission,
         id: _this.data.alarmId
       },
       header: {
@@ -101,22 +75,16 @@ Page({
             transaction:res.data.message[1]
           });
         } else if (res.data.code == -2) {
-          wx.showToast({
-            title: '参数异常，请登录后重试',
-            duration: 5000
-          })
+          app.showModal('登录失败，请重新登录', '../check/check');
         } else {
-          wx.showToast({
-            title: '加载失败,下拉页面重新加载',
-            duration: 2000
-          })
+          app.showModal('数据加载失败，请下拉刷新重试');
         }
+        console.log(res.data);
+
       },
       fail: function (res) {
-        wx.showToast({
-          title: '加载失败,下拉页面重新加载',
-          duration: 2000
-        })
+        console.log(res);
+        app.showModal('数据加载失败，请下拉刷新重试');
       },
       complete: function (res) {
         //wx.hideLoading();
@@ -156,7 +124,7 @@ Page({
    */
   onPullDownRefresh: function () {
     var _this=this;
-    _this.getDetail(_this.data.userData.phone, _this.data.userData.token);
+    _this.getDetail();
     wx.stopPullDownRefresh();
   },
 

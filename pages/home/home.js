@@ -17,22 +17,26 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.showLoading({
+      title: '数据加载中...',
+    })
     app.setTitle('站点');
-    this.getStorage();
+    this.getSites();
+    //this.getStorage();
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.formSubmit();
+    //this.formSubmit();
   },
 
   /**
@@ -55,7 +59,7 @@ Page({
   onPullDownRefresh: function () {
     console.log('pull down');
     //wx.showNavigationBarLoading();
-    this.getSites(this.data.userData.phone,this.data.userData.token);
+    this.getSites();
     wx.stopPullDownRefresh();
   },
 
@@ -74,88 +78,46 @@ Page({
   },
   searchConfirm:function(event){
     var searchTxt=event.detail.value;
-    //console.log(searchTxt);
+    searchTxt=searchTxt.replace("'","");
     if (searchTxt=='')searchTxt='all';
     this.setData({
       siteType: searchTxt,
     });
-    this.getSites(this.data.userData.phone, this.data.userData.token);
+    this.getSites();
   },
-  getStorage:function(){
-    var _this=this;
-    wx.showLoading({
-      title: '数据加载中...',
-    })
-    wx.getStorage({
-      key: 'userData',
-      success: function(res) {
-        _this.setData({
-          userData:res.data,
-        });
-        wx.hideLoading();
-        _this.getSites(_this.data.userData.phone,_this.data.userData.token);
-      },
-      fail:function(res){
-        wx.hideLoading();
-        wx.showToast({
-          title: '本地数据错误:'+res.data,
-          duration:5000,
-          icon: 'none'
-        })
-      },
-      complete:function(){
-        //wx.hideLoading();
-        
-      }
-    })
-  },
-  formSubmit:function(e){
-    console.log(e);
-  },
-  getSites:function(phone,token){
-    wx.showLoading({
-      title: '加载站点...',
-    })
+  getSites:function(){
     var _this=this;
     wx.request({
       url: app.globalData.serverUrl + 'sites',
       method: 'POST',
       data: {
-        phone:phone,
-        token:token,
+        phone:app.globalData.phone,
+        token:app.globalData.hasPermission,
         sitetype:_this.data.siteType
       },
       header: {
         'content-type': 'application/json'
       },
       success: function (res) {
+        console.log(res.data);
+        wx.hideLoading();
         if(res.data.code==0){
           wx.hideLoading();
           _this.setData({
             sites: res.data.message
           });
+          if(_this.data.siteType=='all'){
+            app.globalData.sites=res.data.message;
+          }
         }else if(res.data.code==-2){
-          wx.showToast({
-            title: '参数异常，请登录后重试',
-            duration:5000,
-            icon: 'none'
-          })
+          app.showModal('登录失败，请重新登录','../check/check');
         }else{
-          wx.showToast({
-            title: '加载失败,下拉页面重新加载',
-            duration: 2000,
-            icon:'none'
-          })
+          app.showModal('数据加载失败，请下拉刷新重试');
         }
-        //console.log(res.data);
       },
       fail: function (res) {
         console.log(res);
-        wx.showToast({
-          title: '加载失败,下拉页面重新加载',
-          duration: 2000,
-          icon: 'none'
-        })
+        app.showModal('数据加载失败，请下拉刷新重试');
       },
       complete: function (res) {
         //wx.hideLoading();

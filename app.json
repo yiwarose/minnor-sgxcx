@@ -7,7 +7,8 @@
     "pages/report/report",
     "pages/setting/setting",
     "pages/siteDetail/siteDetail",
-    "pages/messageDetail/messageDetail"
+    "pages/messageDetail/messageDetail",
+    "pages/pumpStatic/pumpStatic"
   ],
   "window": {
     "backgroundTextStyle": "light",

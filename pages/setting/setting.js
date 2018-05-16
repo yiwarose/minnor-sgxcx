@@ -6,7 +6,7 @@ Page({
    */
   data: {
     title:'设置',
-    userData:'',
+    phone:'',
     userInfo:{},
     getUserInfoBtn:'点击授权',
     userInfoTxt:'请允许我们使用您的微信用户信息\r\n便于向您推送实时报警信息',
@@ -21,14 +21,9 @@ Page({
   onLoad: function (options) {
     var _this=this;
     app.setTitle(this.data.title);
-    wx.getStorage({
-      key: 'userData',
-      success: function(res) {
-        _this.setData({
-          userData:res.data
-        });
-      },
-    })
+    _this.setData({
+      phone: app.globalData.phone
+    });
     wx.getStorage({
       key: 'userInfo',
       success: function(res) {
@@ -100,8 +95,8 @@ Page({
       url: app.globalData.serverUrl + 'saveuserinfo',
       method: 'POST',
       data: {
-        phone: _this.data.userData.phone,
-        token: _this.data.userData.token,
+        phone: app.globalData.phone,
+        token: app.globalData.hasPermission,
         userinfo:_this.data.userInfo
       },
       header: {
@@ -143,5 +138,47 @@ Page({
       content: '我们专注隧道、站房、市政设施的环境监控',
       showCancel:false
     })
+  },
+  quitUser:function(){
+    var _this = this;
+    wx.showModal({
+      title: '退出',
+      content: '确认退出登录?',
+      success:function(res){
+        if(res.confirm){
+          wx.request({
+            url: app.globalData.serverUrl + 'quit',
+            method: 'POST',
+            data: {
+              phone: app.globalData.phone,
+              token: app.globalData.hasPermission,
+              openid: app.globalData.openId
+            },
+            header: {
+              'content-type': 'application/json'
+            },
+            success: function (res) {
+              if(res.data.code==0){
+                app.globalData.phone = false;
+                app.globalData.hasPermission = false;
+                wx.redirectTo({
+                  url: '../check/check',
+                })
+              }else{
+                app.showModal('退出登录失败，请重试','');
+              }
+              
+            },
+            fail: function (res) {
+              app.showModal('退出登录失败:'+res.data);
+              console.log(res);
+            },
+            complete: function (res) {
+            }
+          });
+        }
+      }
+    })
+    
   }
 })

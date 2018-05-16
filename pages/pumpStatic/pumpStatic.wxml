@@ -1,0 +1,57 @@
+<view class="flex-wrp list" style="height:40px;">
+  <view class="flex-item list-icon" style="width:10%;">
+        <image src="../../images/site.png" style="margin-top:13px;"/>
+  </view>
+  <view class="flex-item font12 gray" style="width:30%;line-height:40px;">
+      站点
+  </view>
+  <view class="flex-item font12 " style="width:60%;line-height:40px;">
+      <picker bindchange="bindSiteChange" mode = "selector" value="{{siteIndex}}" range="{{sites}}">
+        <view class="picker flex-wrp">
+          <view class="flex-item" style="width:88%;">{{sites[siteIndex]}}</view>
+          <view class="flex-item"><i class="fa fa-plus-square-o gray font10"></i></view>
+        </view>
+      </picker>
+  </view>
+</view>
+<view class="flex-wrp list" style="height:40px;">
+  <view class="flex-item list-icon" style="width:10%;line-height:34px;">
+        <i class="fa fa-calendar gray" style="margin-left:10px;font-size:0.6em;"></i>
+  </view>
+  <view class="flex-item font12 gray" style="width:30%;line-height:40px;">
+      起始日期
+  </view>
+    <view class="flex-item font12 " style="width:60%;line-height:40px;">
+      <picker mode="date" bindchange="bindStartChange" value="{{startDate}}" start="2017-05-18" end="{{limitDate}}" bindcancel="getData">
+        <view class="picker flex-wrp">
+          <view class="flex-item" style="width:88%;">{{startDate}}</view>
+          <view class="flex-item"><i class="fa fa-plus-square-o gray"></i></view>
+        </view>
+      </picker>
+  </view>
+</view>
+<view class="flex-wrp list" style="height:40px;">
+  <view class="flex-item list-icon" style="width:10%;line-height:34px;">
+        <i class="fa fa-calendar gray font10" style="margin-left:10px;font-size:0.6em;"></i>
+  </view>
+  <view class="flex-item font12 gray" style="width:30%;line-height:40px;">
+      结束日期
+  </view>
+    <view class="flex-item font12 " style="width:60%;line-height:40px;">
+      <picker mode="date" bindchange="bindEndChange" value="{{endDate}}" start="{{startDate}}" end="{{limitDate}}">
+        <view class="picker flex-wrp">
+          <view class="flex-item" style="width:88%;">{{endDate}}</view>
+          <view class="flex-item"><i class="fa fa-plus-square-o gray"></i></view>
+        </view>
+      </picker>
+  </view>
+</view>
+<view class="container" style="padding-left:0px;" wx:if="{{pump1.length>0&&pump2.length>0}}">
+<canvas canvas-id="columnCanvas" style="height:200px;width:100%;"></canvas>
+</view>
+<view class="container" wx:if="{{pump1.length==0&&pump2.length==0}}">
+    <view class="font12 tcenter gray">{{noResult}}</view>
+</view>
+
+
+

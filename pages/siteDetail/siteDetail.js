@@ -21,7 +21,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  getData: function (phone, token) {
+  getData: function () {
     wx.showLoading({
       title: '曲线加载中...',
     })
@@ -30,8 +30,8 @@ Page({
       url: app.globalData.serverUrl + 'sitechart',
       method: 'POST',
       data: {
-        phone: phone,
-        token: token,
+        phone: app.globalData.phone,
+        token: app.globalData.hasPermission,
         type:'',
         site:this.data.siteNo
       },
@@ -85,7 +85,7 @@ Page({
       }
     });
   },
-  getDevice: function (phone, token) {
+  getDevice: function () {
     wx.showLoading({
       title: '设备加载中...',
     })
@@ -94,8 +94,8 @@ Page({
       url: app.globalData.serverUrl + 'sitedevice',
       method: 'POST',
       data: {
-        phone: phone,
-        token: token,
+        phone: app.globalData.phone,
+        token: app.globalData.hasPermission,
         type: '',
         site: this.data.siteNo
       },
@@ -136,34 +136,6 @@ Page({
       }
     });
   },
-  getStorage: function () {
-    var _this = this;
-    wx.showLoading({
-      title: '数据加载中...',
-    })
-    wx.getStorage({
-      key: 'userData',
-      success: function (res) {
-        _this.setData({
-          userData: res.data,
-        });
-        //wx.hideLoading();
-        _this.getData(_this.data.userData.phone, _this.data.userData.token);
-        _this.getDevice(_this.data.userData.phone, _this.data.userData.token);
-      },
-      fail: function (res) {
-       // wx.hideLoading();
-        wx.showToast({
-          title: '本地数据错误:' + res.data,
-          duration: 5000,
-          icon: 'none'
-        })
-      },
-      complete: function () {
-        //wx.hideLoading();
-      }
-    })
-  },
   touchHandler: function (e) {
     //console.log(lineChart.getCurrentDataIndex(e));
     lineChart.showToolTip(e, {
@@ -194,8 +166,8 @@ Page({
             url: app.globalData.serverUrl + 'devicecontrol',
             method: 'POST',
             data: {
-              phone: _this.data.userData.phone,
-              token: _this.data.userData.token,
+              phone: app.globalData.phone,
+              token: app.globalData.hasPermission,
               cmd: cmdStr,
               site: _this.data.siteNo,
               device: deviceId
@@ -253,7 +225,9 @@ Page({
       siteName:options.siteName
     });
     app.setTitle(this.data.siteName);
-    this.getStorage();
+    //this.getStorage();
+    this.getData();
+    this.getDevice();
     //this.initChart();
   },
   initChart: function (level, categray,highest,lowest){

@@ -1,7 +1,6 @@
 //app.js
 App({
   onLaunch: function () {
-
     this.wxLogIn();
     // 展示本地存储能力
     //var logs = wx.getStorageSync('logs') || []
@@ -54,9 +53,6 @@ App({
     })*/
   },
   wxLogIn:function(){
-    wx.showLoading({
-      title: '数据加载中...',
-    })
     wx.login({
       success: res => {
         this.globalData.resCode = res.code;
@@ -71,9 +67,12 @@ App({
     resCode:'',
     phone:'',
     hasPermission:'',
-    openId:''
+    openId:'',
+    sites:{},
+    userInfoReady:false
   },
   getMiniAppUser: function () {
+    var _this=this;
     wx.request({
       url: this.globalData.serverUrl + 'getuser',
       method: 'POST',
@@ -84,43 +83,67 @@ App({
         'content-type': 'application/json'
       },
       success: function (res) {
-        //console.log(res.data);
-        var app = getApp();
+        //var app = getApp();
         if (res.data.code == 0) {
+          //wx.hideLoading();
           //wx.setStorageSync("sessionTime", Date.now());
-          app.globalData.phone = res.data.message.phone;
-          app.globalData.hasPermission = res.data.message.hasPermission;
-          app.globalData.openId=res.data.message.openId;
-
-          var userData={};
-
-          userData['phone']=app.globalData.phone;
-          userData['hasPermission'] = app.globalData.hasPermission;
-          userData['token'] = app.globalData.hasPermission;
-
-          wx.setStorageSync('userData', userData);
-
-          console.log(userData);
-
+          _this.globalData.phone = res.data.message.phone;
+          _this.globalData.hasPermission = res.data.message.hasPermission;
+          _this.globalData.openId=res.data.message.openId;
+          _this.globalData.userInfoReady=true;
+          //var userData={};
+          //userData['phone']=app.globalData.phone;
+          //userData['hasPermission'] = app.globalData.hasPermission;
+          //userData['token'] = app.globalData.hasPermission;
+          //wx.removeStorageSync('userData');
+          //wx.setStorageSync('userData', userData);
+          console.log(res.data.message);
           console.log('Get user info done');
+          if(_this.globalData.hasPermission){
+            wx.switchTab({
+              url: '../home/home',
+            })
+          }else{
+            /*wx.redirectTo({
+              url: '../check/check',
+            })*/
+          }
         } else {
+          //wx.hideLoading();
           app.showModal('验证用户信息失败:'+res.data.message);
         }
       },
       fail: function (res) {
-        app.showModal('验证用户信息失败:' + res);
+        wx.hideLoading();
+        _this.showModal('验证用户信息失败:' + res);
       },
       complete: function (res) {
-        wx.hideLoading();
-        //console.log('app done');
+        //wx.hideLoading();
       }
     });
   },
-  showModal(error) {
-    wx.showModal({
-      content: error,
-      showCancel: false,
-    })
+  showModal(error,url='') {
+    var _this=this;
+    wx.hideLoading();
+    if(url!=''){
+      wx.showModal({
+        content: error,
+        success:function(res){
+          if(res.confirm){
+            _this.globalData.hasPermission = false;
+            _this.globalData.phone = false;
+            wx.redirectTo({
+              url: url,
+            });
+          }
+        }
+      })
+    }else{
+      wx.showModal({
+        content: error,
+        showCancel: false,
+      });
+    }
   },
   setTitle:function(txt){
     wx.setNavigationBarTitle({
